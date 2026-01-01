@@ -47,6 +47,10 @@ export default function Header() {
           >
             Browse
           </a>
+          <Link href="/assessments" className="text-muted-foreground hover:text-foreground transition-colors smooth-fade">
+            Assessments
+          </Link>
+          <a href="#testimonials" className="text-muted-foreground hover:text-foreground transition-colors smooth-fade">
           <a
             href="#testimonials"
             className="text-muted-foreground hover:text-foreground transition-colors smooth-fade"
@@ -110,6 +114,10 @@ export default function Header() {
               >
                 Browse
               </a>
+              <Link href="/assessments" className="text-foreground hover:text-muted-foreground transition-colors">
+                Assessments
+              </Link>
+              <a href="#testimonials" className="text-foreground hover:text-muted-foreground transition-colors">
               <a
                 href="#testimonials"
                 className="text-foreground hover:text-muted-foreground transition-colors"
