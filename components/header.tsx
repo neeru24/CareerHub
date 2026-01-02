@@ -7,14 +7,35 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ThemeToggle } from "./theme-toggle"
 
+// Desktop navigation links
+const DESKTOP_LINKS = [
+  { name: "Browse", hash: "features" },
+  { name: "Assessments", href: "/assessments" },
+  { name: "Success Stories", hash: "testimonials" },
+  { name: "Plans", hash: "pricing" },
+]
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
 
-  // Helper: generate correct href for hash links
-  const getHref = (hash: string) => (pathname === "/" ? `#${hash}` : `/#${hash}`)
+  /** Generate correct href for desktop/mobile links */
+  const getHref = (link: typeof DESKTOP_LINKS[number]) => {
+    if (link.href) return link.href
+    return pathname === "/" ? `#${link.hash}` : `/#${link.hash}`
+  }
 
-  // Smooth scroll when already on homepage
+  /** Class for desktop nav link with hover/transition effects */
+  const getLinkClass = () => {
+    return "relative text-muted-foreground hover:text-foreground transition-colors duration-300 px-2 py-1 rounded-md hover:bg-gradient-to-r hover:from-primary/20 hover:to-secondary/20 font-medium tracking-wide"
+  }
+
+  /** Class for mobile nav link with hover/translate effects */
+  const getMobileLinkClass = () => {
+    return "text-foreground hover:text-muted-foreground transition-colors duration-300 transform hover:translate-x-1 hover:shadow-sm px-2 py-1 rounded-md"
+  }
+
+  /** Smooth scroll when already on homepage */
   useEffect(() => {
     if (window.location.hash) {
       const id = window.location.hash.substring(1)
@@ -25,36 +46,32 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 glassmorphic border-b shadow-md backdrop-blur-md">
+      {/* Navbar wrapper */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-foreground/20 flex items-center justify-center font-bold text-lg shadow-md hover:shadow-lg hover:brightness-110 transition-all duration-300">
-            C
-          </div>
-          <span className="font-bold text-lg text-foreground hidden sm:inline tracking-wider group-hover:opacity-90 transition-opacity duration-300">
-            CareerHub
-          </span>
-        </Link>
+        {/* Logo Section */}
+        <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 rounded-lg bg-foreground/20 flex items-center justify-center font-bold text-lg shadow-md hover:shadow-lg hover:brightness-110 transition-all duration-300">
+              C
+            </div>
+            <span className="font-bold text-lg text-foreground hidden sm:inline tracking-wider group-hover:opacity-90 transition-opacity duration-300">
+              CareerHub
+            </span>
+          </Link>
+        </div>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center gap-10">
-          {[
-            { name: "Browse", hash: "features" },
-            { name: "Assessments", href: "/assessments" },
-            { name: "Success Stories", hash: "testimonials" },
-            { name: "Plans", hash: "pricing" },
-          ].map((link) => (
-            <Link
-              key={link.name}
-              href={link.href || getHref(link.hash!)}
-              className={`relative text-muted-foreground hover:text-foreground transition-colors duration-300 px-2 py-1 rounded-md hover:bg-gradient-to-r hover:from-primary/20 hover:to-secondary/20 font-medium tracking-wide`}
-            >
-              {link.name}
-            </Link>
+          {DESKTOP_LINKS.map((link) => (
+            <div key={link.name} className="nav-link-wrapper">
+              <Link href={getHref(link)} className={getLinkClass()}>
+                {link.name}
+              </Link>
+            </div>
           ))}
         </div>
 
-        {/* Desktop CTA */}
+        {/* Desktop Call-To-Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
           <Link href="/login">
@@ -69,35 +86,35 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground" aria-label="Toggle menu">
-          {isOpen ? (
-            <X size={24} className="transition-transform duration-300 group-hover:-rotate-12" />
-          ) : (
-            <Menu size={24} className="transition-transform duration-300 group-hover:rotate-12" />
-          )}
-        </button>
+        {/* Mobile Menu Toggle Button */}
+        <div className="mobile-menu-button md:hidden">
+          <button onClick={() => setIsOpen(!isOpen)} className="text-foreground" aria-label="Toggle menu">
+            {isOpen ? (
+              <X size={24} className="transition-transform duration-300 group-hover:-rotate-12" />
+            ) : (
+              <Menu size={24} className="transition-transform duration-300 group-hover:rotate-12" />
+            )}
+          </button>
+        </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation Menu */}
         {isOpen && (
           <div className="absolute top-20 left-0 right-0 glassmorphic border-b p-4 md:hidden rounded-b-xl shadow-lg backdrop-blur-md slide-down-animation">
-            <div className="flex flex-col gap-4">
-              {[
-                { name: "Browse", hash: "features" },
-                { name: "Assessments", href: "/assessments" },
-                { name: "Success Stories", hash: "testimonials" },
-                { name: "Plans", hash: "pricing" },
-              ].map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href || getHref(link.hash!)}
-                  className="text-foreground hover:text-muted-foreground transition-colors duration-300 transform hover:translate-x-1 hover:shadow-sm px-2 py-1 rounded-md"
-                  onClick={() => setIsOpen(false)} // close menu on click
-                >
-                  {link.name}
-                </Link>
+            <div className="flex flex-col gap-4 mobile-links-wrapper">
+              {DESKTOP_LINKS.map((link) => (
+                <div key={link.name} className="mobile-link-item">
+                  <Link
+                    href={getHref(link)}
+                    className={getMobileLinkClass()}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                </div>
               ))}
-              <div className="flex gap-2 pt-4">
+
+              {/* Mobile CTA Buttons */}
+              <div className="flex gap-2 pt-4 mobile-cta-wrapper">
                 <ThemeToggle />
                 <Link href="/login" className="flex-1">
                   <Button variant="outline" className="w-full bg-transparent hover:opacity-80 transition duration-300">
