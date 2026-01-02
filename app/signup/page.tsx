@@ -7,18 +7,20 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 
-// ✅ add existing components
+// existing components
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 
 export default function SignupPage() {
   const router = useRouter()
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
   })
+
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -48,6 +50,7 @@ export default function SignupPage() {
         return
       }
 
+      // simulated signup
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -56,6 +59,7 @@ export default function SignupPage() {
           loggedIn: true,
         }),
       )
+
       router.push("/dashboard")
     } catch {
       setError("Sign up failed. Please try again.")
@@ -69,19 +73,20 @@ export default function SignupPage() {
       {/* Header */}
       <Header />
 
-      {/* Signup Content */}
+      {/* Signup Page Content */}
       <main className="min-h-[calc(100vh-4rem)] bg-background flex items-center justify-center px-4 fade-in">
         <div className="w-full max-w-md">
-
           <div className="glassmorphic p-8 rounded-2xl border-foreground/10 scale-in">
             <h1 className="text-3xl font-bold text-foreground mb-2">
               Create Your Account
             </h1>
+
             <p className="text-muted-foreground mb-8">
               Join thousands finding their next opportunity
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Full Name */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Full Name
@@ -97,6 +102,7 @@ export default function SignupPage() {
                 />
               </div>
 
+              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Email Address
@@ -112,6 +118,7 @@ export default function SignupPage() {
                 />
               </div>
 
+              {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Password
@@ -127,6 +134,7 @@ export default function SignupPage() {
                 />
               </div>
 
+              {/* Confirm Password */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Confirm Password
@@ -142,12 +150,14 @@ export default function SignupPage() {
                 />
               </div>
 
+              {/* Error */}
               {error && (
                 <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-600 dark:text-red-400 text-sm">
                   {error}
                 </div>
               )}
 
+              {/* Submit */}
               <Button
                 type="submit"
                 disabled={isLoading}
@@ -157,12 +167,14 @@ export default function SignupPage() {
               </Button>
             </form>
 
+            {/* Divider */}
             <div className="flex items-center gap-4 my-6">
               <div className="flex-1 h-px bg-foreground/10" />
               <span className="text-xs text-muted-foreground">OR</span>
               <div className="flex-1 h-px bg-foreground/10" />
             </div>
 
+            {/* Sign In */}
             <p className="text-center text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link
