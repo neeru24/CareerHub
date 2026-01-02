@@ -1,3 +1,5 @@
+"use client"
+
 import { Briefcase, GraduationCap, Lightbulb, MapPin, Trophy, Award } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import Link from "next/link"

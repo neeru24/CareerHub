@@ -1,7 +1,10 @@
+"use client"
 import { Github, Twitter, Linkedin } from "lucide-react"
 
+// Footer component
 export default function Footer() {
   return (
+    // Main footer wrapper with background and top border
     <footer className="bg-card border-t border-border">
       <div className="max-w-7xl mx-auto px-6 md:pl-10 py-12 md:py-16">
 
@@ -14,6 +17,8 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold">C</span>
               </div>
+
+              {/* Brand name */}
               <span className="font-bold text-foreground">CareerHub</span>
             </div>
             <p className="text-sm text-muted-foreground ">

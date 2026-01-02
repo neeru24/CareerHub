@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { LogOut, Search } from "lucide-react"
+import { LogOut, Search, Briefcase, GraduationCap, Users, User, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 interface User {
   email: string
@@ -16,6 +16,8 @@ export default function DashboardContent() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user")
@@ -33,6 +35,20 @@ export default function DashboardContent() {
       setIsLoading(false)
     }
   }, [router])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [])
 
   const handleLogout = () => {
     localStorage.removeItem("user")
@@ -58,11 +74,40 @@ export default function DashboardContent() {
           </Link>
 
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground hidden sm:inline">{user.email}</span>
-            <Button onClick={handleLogout} variant="ghost" className="text-foreground hover:bg-foreground/10 gap-2">
-              <LogOut className="w-4 h-4" />
-              Logout
-            </Button>
+            <div className="relative" ref={dropdownRef}>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="rounded-full hover:bg-foreground/10 relative"
+                aria-haspopup="true"
+                aria-expanded={showDropdown}
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                <User className="w-10 h-10" />
+              </Button>
+              {showDropdown && (
+                <div className="absolute right-0 mt-2 w-48 bg-background border border-foreground/10 rounded-lg shadow-lg py-2 z-50">
+                  <Link 
+                    href="/profile/edit" 
+                    className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-foreground/10 w-full"
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Edit Profile
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      handleLogout();
+                      setShowDropdown(false);
+                    }}
+                    className="flex items-center w-full text-left px-4 py-2 text-sm text-foreground hover:bg-foreground/10"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -81,19 +126,20 @@ export default function DashboardContent() {
           {/* Search Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { title: "Browse Jobs", description: "Latest job postings updated daily", icon: "💼" },
-              { title: "Find Scholarships", description: "Discover funding opportunities", icon: "🎓" },
-              { title: "Explore Internships", description: "Gain real-world experience", icon: "📚" },
+              { title: "Browse Jobs", description: "Latest job postings updated daily", icon: <Briefcase className="w-8 h-8" />, href: "/browse" },
+              { title: "Find Scholarships", description: "Discover funding opportunities", icon: <GraduationCap className="w-8 h-8" />, href: "/browse" },
+              { title: "Explore Internships", description: "Gain real-world experience", icon: <Users className="w-8 h-8" />, href: "/browse" },
             ].map((item, idx) => (
-              <div
-                key={idx}
-                className="glassmorphic p-6 rounded-xl border-foreground/10 hover:border-foreground/30 transition-all duration-300 cursor-pointer scale-in"
-                style={{ animationDelay: `${idx * 100}ms` }}
-              >
-                <div className="text-3xl mb-3">{item.icon}</div>
-                <h3 className="text-lg font-semibold text-foreground mb-1">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
-              </div>
+              <Link href={item.href} key={idx}>
+                <div
+                  className="glassmorphic p-6 rounded-xl border-foreground/10 hover:border-foreground/30 transition-all duration-300 cursor-pointer scale-in"
+                  style={{ animationDelay: `${idx * 100}ms` }}
+                >
+                  <div className="mb-3">{item.icon}</div>
+                  <h3 className="text-lg font-semibold text-foreground mb-1">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                </div>
+              </Link>
             ))}
           </div>
 
@@ -108,7 +154,7 @@ export default function DashboardContent() {
                   className="glass-input w-full pl-10"
                 />
               </div>
-              <Button className="glassmorphic-button-primary text-foreground">Search</Button>
+              <Button className="glassmorphic-button-primary">Search</Button>
             </div>
           </div>
         </div>

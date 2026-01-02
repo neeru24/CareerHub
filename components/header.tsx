@@ -21,7 +21,7 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors smooth-fade">
+          <a href="/browse" className="text-muted-foreground hover:text-foreground transition-colors smooth-fade">
             Browse
           </a>
           <Link href="/assessments" className="text-muted-foreground hover:text-foreground transition-colors smooth-fade">
@@ -39,12 +39,12 @@ export default function Header() {
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
           <Link href="/login">
-            <Button variant="ghost" className="text-foreground hover:bg-foreground/10">
+            <Button variant="ghost" className="hover:bg-foreground/10">
               Sign In
             </Button>
           </Link>
           <Link href="/signup">
-            <Button className="glassmorphic-button-primary text-black">Sign Up</Button>
+            <Button className="glassmorphic-button-primary">Sign Up</Button>
           </Link>
         </div>
 
@@ -72,12 +72,12 @@ export default function Header() {
               <div className="flex gap-2 pt-4">
                 <ThemeToggle />
                 <Link href="/login" className="flex-1">
-                  <Button variant="outline" className="w-full bg-transparent">
+                  <Button variant="outline" className="w-full">
                     Sign In
                   </Button>
                 </Link>
                 <Link href="/signup" className="flex-1">
-                  <Button className="w-full glassmorphic-button-primary text-black">Sign Up</Button>
+                  <Button className="w-full glassmorphic-button-primary">Sign Up</Button>
                 </Link>
               </div>
             </div>
