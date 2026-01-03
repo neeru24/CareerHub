@@ -66,8 +66,8 @@ export default function Header() {
 
   const renderLink = (link: typeof LINKS[number], mobile = false) => {
     const baseClasses = mobile
-      ? "w-full text-left px-4 py-3 rounded-lg text-base font-medium text-foreground/80 hover:bg-foreground/10 hover:text-foreground transition"
-      : "relative px-4 py-2 text-foreground/80 hover:text-foreground transition group";
+      ? "w-full rounded-lg px-4 py-3 text-base font-medium text-left text-foreground/80 hover:bg-foreground/10 hover:text-foreground transition"
+      : "relative px-4 py-2 text-foreground/80 hover:text-foreground transition";
 
     if (link.href) {
       return (
@@ -97,53 +97,61 @@ export default function Header() {
    * CTA logic
    * --------------------------- */
   const renderCTA = (mobile = false) => {
+    const wrapperClass = mobile ? "w-full space-y-3" : "flex items-center gap-3";
+
     if (pathname === "/browse") {
       if (isCompanyLoggedIn) {
         return (
-          <Link href="/company/dashboard" className={mobile ? "w-full" : ""}>
-            <Button className="w-full flex items-center justify-center gap-2 glassmorphic-button-primary">
-              <User className="w-4 h-4" />
-              Company Dashboard
-            </Button>
-          </Link>
+          <div className={wrapperClass}>
+            <Link href="/company/dashboard" className="w-full">
+              <Button className="w-full flex items-center gap-2 glassmorphic-button-primary">
+                <User className="w-4 h-4" />
+                Company Dashboard
+              </Button>
+            </Link>
+          </div>
         );
       }
 
       if (isLoggedIn) {
         return (
-          <Link href="/dashboard" className={mobile ? "w-full" : ""}>
-            <Button className="w-full flex items-center justify-center gap-2 glassmorphic-button-primary">
-              <User className="w-4 h-4" />
-              Student Dashboard
-            </Button>
-          </Link>
+          <div className={wrapperClass}>
+            <Link href="/dashboard" className="w-full">
+              <Button className="w-full flex items-center gap-2 glassmorphic-button-primary">
+                <User className="w-4 h-4" />
+                Student Dashboard
+              </Button>
+            </Link>
+          </div>
         );
       }
     }
 
     return (
-      <>
-        <Link href="/company/login" className={mobile ? "w-full" : ""}>
-          <Button className="w-full" variant={mobile ? "outline" : "default"}>
+      <div className={wrapperClass}>
+        <Link href="/company/login" className="w-full">
+          <Button className="w-full" variant="outline">
             Company Login
           </Button>
         </Link>
-        <Link href="/login" className={mobile ? "w-full" : ""}>
-          <Button className="w-full" variant={mobile ? "outline" : "default"}>
+
+        <Link href="/login" className="w-full">
+          <Button className="w-full" variant="outline">
             Student Login
           </Button>
         </Link>
-        <Link href="/signup" className={mobile ? "w-full" : ""}>
+
+        <Link href="/signup" className="w-full">
           <Button className="w-full glassmorphic-button-primary">
             Sign Up
           </Button>
         </Link>
-      </>
+      </div>
     );
   };
 
   return (
-    <header className="sticky top-0 z-50 glassmorphic border-b">
+    <header className="sticky top-0 z-50 h-16 glassmorphic border-b">
       <nav className="max-w-7xl mx-auto h-16 px-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -176,12 +184,10 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden fixed inset-x-0 top-16 z-40 glassmorphic border-t px-4 py-6 space-y-4 animate-slide-down">
+        <div className="md:hidden fixed inset-x-0 top-[64px] z-40 glassmorphic border-t px-4 py-6 space-y-4">
           {LINKS.map((l) => renderLink(l, true))}
 
-          <div className="pt-4 space-y-3">
-            {renderCTA(true)}
-          </div>
+          {renderCTA(true)}
 
           <div className="pt-4 flex justify-center">
             <ThemeToggle />
