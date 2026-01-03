@@ -16,6 +16,7 @@ interface UserProfile {
   fullName: string;
   email: string;
   profileImage: string | null;
+  resumeUrl: string | null;
   skills: string;
   interests: string;
 }
@@ -28,10 +29,12 @@ export default function EditProfilePage() {
     fullName: "",
     email: "",
     profileImage: null,
+    resumeUrl: null,
     skills: "",
     interests: "",
   });
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewResume, setPreviewResume] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -50,6 +53,7 @@ export default function EditProfilePage() {
         fullName: userData.fullName || userData.email.split("@")[0],
         email: userData.email,
         profileImage: profile?.profileImage || null,
+        resumeUrl: profile?.resumeUrl || null,
         skills: profile?.skills || "",
         interests: profile?.interests || "",
       };
@@ -57,6 +61,7 @@ export default function EditProfilePage() {
       setUser(userProfile);
       setFormData(userProfile);
       setPreviewImage(profile?.profileImage || null);
+      setPreviewResume(profile?.resumeUrl || null);
     } catch {
       router.push("/login");
     } finally {
@@ -95,6 +100,42 @@ export default function EditProfilePage() {
     }));
   };
 
+  const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check if file is a PDF, DOC, or DOCX
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a PDF, DOC, or DOCX file');
+        return;
+      }
+      
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size should be less than 5MB');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewResume(reader.result as string);
+        setFormData(prev => ({
+          ...prev,
+          resumeUrl: reader.result as string
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveResume = () => {
+    setPreviewResume(null);
+    setFormData(prev => ({
+      ...prev,
+      resumeUrl: null
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -103,6 +144,7 @@ export default function EditProfilePage() {
       // Save profile data to localStorage
       const profileData = {
         profileImage: formData.profileImage,
+        resumeUrl: formData.resumeUrl,
         skills: formData.skills,
         interests: formData.interests,
       };
@@ -206,7 +248,38 @@ export default function EditProfilePage() {
                     )}
                   </div>
                 </div>
-
+                                
+                {/* Resume Upload Section */}
+                <div className="space-y-2">
+                  <Label htmlFor="resume">Resume</Label>
+                  <div className="flex flex-col sm:flex-row gap-2 w-full">
+                    <Input
+                      id="resume"
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleResumeChange}
+                      className="flex-1"
+                      aria-label="Upload resume"
+                    />
+                    {previewResume && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <span>Resume uploaded</span>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={handleRemoveResume}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Accepted formats: PDF, DOC, DOCX (Max size: 5MB)
+                  </p>
+                </div>
+                                
                 {/* Personal Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
