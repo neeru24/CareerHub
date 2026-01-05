@@ -40,12 +40,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {/* Cursor Trail */}
+          <CursorTrail />
+
           {children}
           <Toaster />
           <Analytics />
         </ThemeProvider>
+
         <Script
           id="voiceflow-chat"
           strategy="afterInteractive"
@@ -63,9 +67,11 @@ export default function RootLayout({
                     }
                   });
                 }
-                v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+                v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
+                v.type = "text/javascript";
+                s.parentNode.insertBefore(v, s);
               })(document, 'script');
-            `
+            `,
           }}
         />
       </body>
