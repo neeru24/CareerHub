@@ -1,6 +1,6 @@
 "use client"
 
-import { Briefcase, GraduationCap, Lightbulb, MapPin, Trophy, Award } from "lucide-react"
+import { Briefcase, GraduationCap, Lightbulb, MapPin, Trophy, Award, Building } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import Link from "next/link"
 
@@ -12,12 +12,14 @@ export default function Features() {
       title: "Latest Job Postings",
       description:
         "Browse hundreds of recently posted job opportunities updated in real-time from top companies worldwide.",
+      link: "/browse"
     },
     {
       id: 2,
       icon: GraduationCap,
       title: "Scholarship Opportunities",
       description: "Discover and apply for scholarships that match your profile. Get funded for your education today.",
+      link: "/browse"
     },
     {
       id: 3,
@@ -25,22 +27,31 @@ export default function Features() {
       title: "Internship Programs",
       description:
         "Access exclusive internship programs to gain real-world experience and build your professional network.",
+      link: "/browse"
     },
     {
       id: 4,
-      icon: MapPin,
-      title: "Smart Location Matching",
-      description: "Filter by location, remote options, or relocation opportunities that suit your career preferences.",
+      icon: Building,
+      title: "Company Profiles & Reviews",
+      description: "Research companies with detailed profiles and authentic employee reviews to make informed career decisions.",
+      link: "/companies"
     },
     {
       id: 5,
+      icon: MapPin,
+      title: "Smart Location Matching",
+      description: "Filter by location, remote options, or relocation opportunities that suit your career preferences.",
+      link: "/browse"
+    },
+    {
+      id: 6,
       icon: Trophy,
       title: "Skill Assessments",
       description: "Take industry-standard assessments and earn certificates that verify your expertise to boost job applications.",
       link: "/assessments"
     },
     {
-      id: 6,
+      id: 7,
       icon: Award,
       title: "Global Leaderboard",
       description: "Compete with professionals worldwide and showcase your skills on our global ranking system.",
@@ -65,7 +76,7 @@ export default function Features() {
             const Icon = feature.icon
             const CardContent = (
               <>
-                <div className="inline-flex p-3 bg-foreground/10 rounded-lg mb-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-foreground/10 rounded-lg mb-4">
                   <Icon className="w-6 h-6 text-foreground" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">{feature.title}</h3>
